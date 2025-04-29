@@ -38,11 +38,10 @@ export async function POST(request: NextRequest) {
       const cookieStore = await cookies();
       cookieStore.set('admin_token', token, {
         httpOnly: true,
-        secure: true,
+        secure: true, // Always true for Vercel deployments
         maxAge: 60 * 60 * 24, // 24 hours
         path: '/',
         sameSite: 'lax',
-        domain: 'unv-iran.com' // Add this line for your domain
       });
 
       // Add a short delay before responding to ensure the cookie is properly set
