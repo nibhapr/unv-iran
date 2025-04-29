@@ -23,10 +23,6 @@ const nextConfig = {
       },
     ],
   },
-  // Add this section to expose environment variables to Edge functions (middleware)
-  experimental: {
-    serverComponentsExternalPackages: [],
-  },
   env: {
     JWT_SECRET: process.env.JWT_SECRET,
   },

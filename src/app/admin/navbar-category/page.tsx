@@ -110,12 +110,18 @@ export default function NavbarCategory() {
       
       const method = editingCategory ? 'PUT' : 'POST';
       
+      // Add slug to the formData based on the title
+      const dataToSubmit = {
+        ...formData,
+        slug: formData.title.toLowerCase().replace(/\s+/g, '-'),
+      };
+      
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSubmit),
       });
       
       if (!response.ok) {
