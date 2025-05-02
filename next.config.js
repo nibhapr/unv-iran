@@ -26,6 +26,15 @@ const nextConfig = {
   env: {
     JWT_SECRET: process.env.JWT_SECRET,
   },
+  // Add rewrites for sitemap.xml
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap',
+      },
+    ];
+  },
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig

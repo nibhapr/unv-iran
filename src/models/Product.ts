@@ -37,8 +37,12 @@ const ProductSchema = new Schema<IProduct>(
       default: 'Active' 
     }
   },
-  { timestamps: true }
-);
+  // Add timestamps: true to your schema options if not already present
+  // This will automatically add createdAt and updatedAt fields
+  
+ { timestamps: true });
+
+
 
 // Pre-save hook to generate slug from title
 ProductSchema.pre('save', function(next) {
@@ -48,4 +52,4 @@ ProductSchema.pre('save', function(next) {
   next();
 });
 
-export default mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema); 
+export default mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema);

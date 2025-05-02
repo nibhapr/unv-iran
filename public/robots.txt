@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Disallow admin routes
+Disallow: /admin/
+Disallow: /admin-login/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://unv-iran.com/sitemap.xml
