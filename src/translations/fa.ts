@@ -39,7 +39,7 @@ export default {
     }
   },
   header: {
-    email: "info@uniview.com",
+    email: "info@unv-iran.com",
     phone: "+1 (555) 123-4567"
   },
   hero: {
@@ -1242,7 +1242,7 @@ export default {
       contactTitle: "تماس با ما",
       contactP1: "اگر سؤال، نگرانی یا درخواستی در مورد این سیاست حفظ حریم خصوصی یا شیوه‌های حفظ حریم خصوصی ما دارید، لطفاً با ما تماس بگیرید:",
       contactCompany: "یونی‌ویو ایران",
-      contactEmail: "ایمیل: privacy@uniview-iran.com",
+      contactEmail: "ایمیل: info@unv-iran.com",
       contactPhone: "تلفن: 9821XXXXXXX+",
       contactAddress: "آدرس: [آدرس شما در ایران]",
       ctaTitle: "سوالی در مورد حریم خصوصی خود دارید؟",
@@ -1294,7 +1294,7 @@ export default {
       contactTitle: "تماس با ما",
       contactP1: "اگر سؤال یا نگرانی در مورد استفاده ما از کوکی‌ها یا این سیاست کوکی‌ها دارید، لطفاً با ما تماس بگیرید:",
       contactCompany: "یونی‌ویو ایران",
-      contactEmail: "ایمیل: privacy@uniview-iran.com",
+      contactEmail: "ایمیل: info@unv-iran.com",
       contactPhone: "تلفن: 9821XXXXXXX+",
       contactAddress: "آدرس: [آدرس شما در ایران]",
       ctaTitle: "سوالی در مورد کوکی‌ها دارید؟",

@@ -39,7 +39,7 @@ export default {
     }
   },
   header: {
-    email: "info@uniview.com",
+    email: "info@unv-iran.com",
     phone: "+1 (555) 123-4567"
   },
   hero: {
@@ -934,7 +934,7 @@ export default {
       contactTitle: "Contact Us",
       contactP1: "If you have any questions or concerns about our use of cookies or this Cookie Policy, please contact us at:",
       contactCompany: "Uniview Iran",
-      contactEmail: "Email: privacy@uniview-iran.com",
+      contactEmail: "Email: info@unv-iran.com",
       contactPhone: "Phone: +98 21 XXXX XXXX",
       contactAddress: "Address: [Your Address in Iran]",
       ctaTitle: "Have Questions About Cookies?",
@@ -1273,7 +1273,7 @@ export default {
       contactTitle: "Contact Us",
       contactP1: "If you have any questions, concerns, or requests regarding this Privacy Policy or our privacy practices, please contact us at:",
       contactCompany: "Uniview Iran",
-      contactEmail: "Email: privacy@uniview-iran.com",
+      contactEmail: "Email: info@unv-iran.com",
       contactPhone: "Phone: +98 21 XXXX XXXX",
       contactAddress: "Address: [Your Address in Iran]",
       ctaTitle: "Have Questions About Your Privacy?",

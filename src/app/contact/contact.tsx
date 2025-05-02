@@ -19,7 +19,7 @@ const ContactPage = () => {
       "@type": "ContactPoint",
       "telephone": "+1-555-123-4567",
       "contactType": "customer service",
-      "email": "info@uniview.com",
+      "email": "info@unv-iran.com",
       "areaServed": "IR",
       "availableLanguage": ["en", "fa"]
     },
@@ -174,10 +174,10 @@ const ContactPage = () => {
                   <div>
                     <p className="text-gray-600 text-sm">{t('home.contact.emailLabel') || 'Email'}</p>
                     <a 
-                      href="mailto:info@uniview.com" 
+                      href="mailto:info@unv-iran.com" 
                       className="text-blue-800 hover:text-blue-600 font-medium"
                     >
-                      info@uniview.com
+                      info@unv-iran.com
                     </a>
                   </div>
                 </div>
