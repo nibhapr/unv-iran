@@ -40,7 +40,7 @@ export default {
   },
   header: {
     email: "info@unv-iran.com",
-    phone: "+1 (555) 123-4567"
+    phone: "+971 55 902 5905"
   },
   hero: {
     title: "Protect What Matters Most with Uniview",
@@ -935,7 +935,7 @@ export default {
       contactP1: "If you have any questions or concerns about our use of cookies or this Cookie Policy, please contact us at:",
       contactCompany: "Uniview Iran",
       contactEmail: "Email: info@unv-iran.com",
-      contactPhone: "Phone: +98 21 XXXX XXXX",
+      contactPhone: "Phone: +971 55 902 5905",
       contactAddress: "Address: [Your Address in Iran]",
       ctaTitle: "Have Questions About Cookies?",
       ctaDescription: "Our team is here to help answer any questions you may have about our cookie practices or your privacy rights.",
@@ -955,7 +955,7 @@ export default {
       emailInputLabel: 'Email Address',
       emailPlaceholder: 'john@example.com',
       phoneInputLabel: 'Phone Number (Optional)',
-      phonePlaceholder: '+1 (555) 123-4567',
+      phonePlaceholder: '+971 55 902 5905',
       messageLabel: 'Your Message',
       messagePlaceholder: 'How can we help you?',
       submitButton: 'Send Message'
@@ -1274,7 +1274,7 @@ export default {
       contactP1: "If you have any questions, concerns, or requests regarding this Privacy Policy or our privacy practices, please contact us at:",
       contactCompany: "Uniview Iran",
       contactEmail: "Email: info@unv-iran.com",
-      contactPhone: "Phone: +98 21 XXXX XXXX",
+      contactPhone: "Phone: +971 55 902 5905",
       contactAddress: "Address: [Your Address in Iran]",
       ctaTitle: "Have Questions About Your Privacy?",
       ctaDescription: "Our team is here to help answer any questions you may have about our privacy practices or your rights.",

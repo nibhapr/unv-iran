@@ -215,17 +215,11 @@ const Footer = () => {
               {t('home.footer.contactTitle') || 'Contact Us'}
             </h4>
             <div className="space-y-4">
-              <div className="flex items-start">
-                <FiMapPin className="text-blue-600 mt-1 mr-3 flex-shrink-0" />
-                <span className="text-gray-600">
-                  {t('home.footer.address') || '123 Security Avenue, Suite 101'}<br />
-                  {t('home.footer.city') || 'San Francisco, CA 94103'}
-                </span>
-              </div>
+
               <div className="flex items-center">
                 <FiPhone className="text-blue-600 mr-3 flex-shrink-0" />
-                <a href="tel:+15551234567" className="text-gray-600 hover:text-blue-600 transition-colors">
-                  +1 (555) 123-4567
+                <a href="tel:+971 55 902 5905" className="text-gray-600 hover:text-blue-600 transition-colors">
+                  +971 55 902 5905
                 </a>
               </div>
               <div className="flex items-center">

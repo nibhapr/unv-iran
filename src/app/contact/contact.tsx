@@ -192,22 +192,11 @@ const ContactPage = () => {
                       href="tel:+1-555-123-4567" 
                       className="text-blue-800 hover:text-blue-600 font-medium"
                     >
-                      +1 (555) 123-4567
+                      +971 55 902 5905
                     </a>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-4 p-4 rounded-lg hover:bg-blue-50 transition-colors duration-300">
-                  <div className="bg-blue-100 p-3 rounded-full">
-                    <FiMapPin className="text-blue-600 text-2xl" />
-                  </div>
-                  <div>
-                    <p className="text-gray-600 text-sm">{t('home.contact.addressLabel') || 'Address'}</p>
-                    <p className="text-gray-800 font-medium">
-                      {t('home.contact.address') || '123 Tech Lane, Innovation Park, CA 94000'}
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -261,7 +250,7 @@ const ContactPage = () => {
                     id="phone"
                     type="tel"
                     name="phone"
-                    placeholder={t('home.contact.phonePlaceholder') || "+1 (555) 123-4567"}
+                    placeholder={t('home.contact.phonePlaceholder') || "+971 55 902 5905"}
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300
