@@ -179,7 +179,7 @@ const Terms = () => {
                 </p>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-gray-700 mb-2"><strong>{t('home.terms.contactCompany') || 'Uniview Iran'}</strong></p>
-                  <p className="text-gray-700 mb-2">{t('home.terms.contactEmailLabel') || 'Email:'} info@unv-iran.com</p>
+                  <p className="text-gray-700 mb-2">{t('home.terms.contactEmailLabel') || 'Email:'} sales@unv-iran.com </p>
                   <p className="text-gray-700 mb-2">{t('home.terms.contactPhoneLabel') || 'Phone:'} +971 55 902 5905</p>
                 </div>
               </div>

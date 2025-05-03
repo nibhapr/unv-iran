@@ -39,7 +39,7 @@ export default {
     }
   },
   header: {
-    email: "info@unv-iran.com",
+    email: "sales@unv-iran.com ",
     phone: "+971 55 902 5905"
   },
   hero: {
@@ -1242,7 +1242,7 @@ export default {
       contactTitle: "تماس با ما",
       contactP1: "اگر سؤال، نگرانی یا درخواستی در مورد این سیاست حفظ حریم خصوصی یا شیوه‌های حفظ حریم خصوصی ما دارید، لطفاً با ما تماس بگیرید:",
       contactCompany: "یونی‌ویو ایران",
-      contactEmail: "ایمیل: info@unv-iran.com",
+      contactEmail: "ایمیل: sales@unv-iran.com ",
       contactPhone: "تلفن: +971 55 902 5905",
       contactAddress: "آدرس: [آدرس شما در ایران]",
       ctaTitle: "سوالی در مورد حریم خصوصی خود دارید؟",
@@ -1294,7 +1294,7 @@ export default {
       contactTitle: "تماس با ما",
       contactP1: "اگر سؤال یا نگرانی در مورد استفاده ما از کوکی‌ها یا این سیاست کوکی‌ها دارید، لطفاً با ما تماس بگیرید:",
       contactCompany: "یونی‌ویو ایران",
-      contactEmail: "ایمیل: info@unv-iran.com",
+      contactEmail: "ایمیل: sales@unv-iran.com ",
       contactPhone: "تلفن: +971 55 902 5905",
       contactAddress: "آدرس: [آدرس شما در ایران]",
       ctaTitle: "سوالی در مورد کوکی‌ها دارید؟",

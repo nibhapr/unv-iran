@@ -12,7 +12,7 @@ const TopBar = () => {
           {/* Contact Links - Responsive layout for mobile */}
           <div className="flex flex-wrap items-center gap-3 xs:gap-4 sm:space-x-4 rtl:space-x-reverse">
             <a 
-              href="mailto:info@unv-iran.com" 
+              href="mailto:sales@unv-iran.com " 
               className="flex items-center text-gray-600 hover:text-blue-600 text-xs sm:text-sm transition-colors"
               aria-label="Email Us"
             >
