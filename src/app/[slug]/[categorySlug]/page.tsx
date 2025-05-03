@@ -6,30 +6,33 @@ import SubCategory from '@/models/SubCategory';
 import Navbar from '../../Components/Navbar';
 import Footer from '../../Components/Footer';
 import Link from 'next/link';
-import { FiArrowLeft, FiBox, FiTag } from 'react-icons/fi';
+import Image from 'next/image';
+import { FiBox, FiTag } from 'react-icons/fi';
 import { Metadata } from 'next';
+import { cache } from 'react';
 
-async function getNavbarCategoryBySlug(slug: string) {
+// Cached database queries for better performance
+const getNavbarCategoryBySlug = cache(async (slug: string) => {
   await connectDB();
   return NavbarCategory.findOne({ slug, status: 'Active' });
-}
+});
 
-async function getCategoryBySlug(slug: string, navbarCategoryId: string) {
+const getCategoryBySlug = cache(async (slug: string, navbarCategoryId: string) => {
   await connectDB();
   return Category.findOne({ 
     slug, 
     navbarCategory: navbarCategoryId, 
     status: 'Active' 
   });
-}
+});
 
-async function getSubcategoriesByCategory(categoryId: string) {
+const getSubcategoriesByCategory = cache(async (categoryId: string) => {
   await connectDB();
   return SubCategory.find({ 
     category: categoryId,
     status: 'Active'
   });
-}
+});
 
 // Change the interface to match Next.js 15 expectations
 interface Params {
@@ -82,11 +85,11 @@ export default async function CategoryDetailPage({ params }: { params: Params })
       
       {/* Enhanced Hero Section */}
       <div className="bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 text-white pt-40 pb-32 relative overflow-hidden">
-        {/* Animated decorative elements */}
+        {/* Animated decorative elements - optimized with will-change */}
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-indigo-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
-          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-blue-400/15 rounded-full blur-2xl animate-pulse delay-500"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse will-change-transform"></div>
+          <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-indigo-300/20 rounded-full blur-3xl animate-pulse delay-700 will-change-transform"></div>
+          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-blue-400/15 rounded-full blur-2xl animate-pulse delay-500 will-change-transform"></div>
         </div>
         
         <div className="container mx-auto px-4 max-w-6xl relative z-10">
@@ -94,7 +97,7 @@ export default async function CategoryDetailPage({ params }: { params: Params })
             <div className="flex items-center space-x-2 text-blue-100 mb-6">
               <Link href="/" className="hover:text-white transition-colors">Home</Link>
               <span>/</span>
-              <Link href={`/${navbarCategory.slug}`} className="hover:text-white transition-colors">{navbarCategory.title}</Link>
+              <Link href={`/${navbarCategory.slug}`} className="hover:text-white transition-colors" prefetch={false}>{navbarCategory.title}</Link>
               <span>/</span>
               <span className="text-white">{category.name}</span>
             </div>
@@ -153,14 +156,20 @@ export default async function CategoryDetailPage({ params }: { params: Params })
                     key={subcategory._id}
                     href={`/${navbarCategory.slug}/${category.slug}/${subcategory.slug}`}
                     className="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
+                    prefetch={false}
                   >
                     <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
                       {subcategory.image ? (
-                        <img 
-                          src={subcategory.image} 
-                          alt={subcategory.title} 
-                          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                        />
+                        <div className="relative w-full h-full">
+                          <Image 
+                            src={subcategory.image} 
+                            alt={subcategory.title} 
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                            className="object-cover transform group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                          />
+                        </div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-3xl text-gray-300">
                           🖼️
@@ -198,6 +207,7 @@ export default async function CategoryDetailPage({ params }: { params: Params })
                 <Link 
                   href="/contact" 
                   className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                  prefetch={false}
                 >
                   Contact Us
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

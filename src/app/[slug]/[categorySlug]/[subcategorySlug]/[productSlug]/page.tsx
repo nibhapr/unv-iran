@@ -7,40 +7,43 @@ import Product from '@/models/Product';
 import Navbar from '../../../../Components/Navbar';
 import Footer from '../../../../Components/Footer';
 import Link from 'next/link';
+import Image from 'next/image';
 import { FiArrowLeft, FiCheck } from 'react-icons/fi';
 import { Metadata } from 'next';
+import { cache } from 'react';
 
-async function getNavbarCategoryBySlug(slug: string) {
+// Cache database connections for better performance
+const getNavbarCategoryBySlug = cache(async (slug: string) => {
   await connectDB();
   return NavbarCategory.findOne({ slug, status: 'Active' });
-}
+});
 
-async function getCategoryBySlug(slug: string, navbarCategoryId: string) {
+const getCategoryBySlug = cache(async (slug: string, navbarCategoryId: string) => {
   await connectDB();
   return Category.findOne({ 
     slug, 
     navbarCategory: navbarCategoryId, 
     status: 'Active' 
   });
-}
+});
 
-async function getSubcategoryBySlug(slug: string, categoryId: string) {
+const getSubcategoryBySlug = cache(async (slug: string, categoryId: string) => {
   await connectDB();
   return SubCategory.findOne({ 
     slug, 
     category: categoryId,
     status: 'Active' 
   });
-}
+});
 
-async function getProductBySlug(slug: string, subcategoryId: string) {
+const getProductBySlug = cache(async (slug: string, subcategoryId: string) => {
   await connectDB();
   return Product.findOne({ 
     slug, 
     subcategory: subcategoryId,
     status: 'Active' 
   });
-}
+});
 
 // Define the params type
 type PageParams = {
@@ -84,11 +87,11 @@ export default async function ProductDetailPage({
       
       {/* Enhanced Hero Section */}
       <div className="bg-gradient-to-br from-blue-600 via-blue-500 to-sky-400 text-white pt-44 pb-32 relative overflow-hidden">
-        {/* Animated decorative elements */}
+        {/* Animated decorative elements - optimized with will-change */}
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-sky-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
-          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-blue-400/15 rounded-full blur-2xl animate-pulse delay-500"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse will-change-transform"></div>
+          <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-sky-300/20 rounded-full blur-3xl animate-pulse delay-700 will-change-transform"></div>
+          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-blue-400/15 rounded-full blur-2xl animate-pulse delay-500 will-change-transform"></div>
         </div>
         
         <div className="container mx-auto px-4 max-w-6xl relative z-10">
@@ -96,15 +99,15 @@ export default async function ProductDetailPage({
             <nav className="flex items-center space-x-2 text-sm font-medium mb-8">
               <Link href="/" className="text-blue-100 hover:text-white transition-colors">Home</Link>
               <span className="text-blue-200/40">→</span>
-              <Link href={`/${navbarCategory.slug}`} className="text-blue-100 hover:text-white transition-colors">
+              <Link href={`/${navbarCategory.slug}`} className="text-blue-100 hover:text-white transition-colors" prefetch={false}>
                 {navbarCategory.title}
               </Link>
               <span className="text-blue-200/40">→</span>
-              <Link href={`/${navbarCategory.slug}/${category.slug}`} className="text-blue-100 hover:text-white transition-colors">
+              <Link href={`/${navbarCategory.slug}/${category.slug}`} className="text-blue-100 hover:text-white transition-colors" prefetch={false}>
                 {category.name}
               </Link>
               <span className="text-blue-200/40">→</span>
-              <Link href={`/${navbarCategory.slug}/${category.slug}/${subcategory.slug}`} className="text-blue-100 hover:text-white transition-colors">
+              <Link href={`/${navbarCategory.slug}/${category.slug}/${subcategory.slug}`} className="text-blue-100 hover:text-white transition-colors" prefetch={false}>
                 {subcategory.title}
               </Link>
             </nav>
@@ -131,24 +134,40 @@ export default async function ProductDetailPage({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Enhanced Product Gallery */}
             <div className="space-y-6">
-              <div className="bg-gray-50 rounded-2xl overflow-hidden h-[500px] flex items-center justify-center p-8 border border-gray-100">
-                <img 
-                  src={product.mainImage} 
-                  alt={product.title} 
-                  className="w-full h-full object-contain"
-                />
+              <div className="bg-gray-50 rounded-2xl overflow-hidden h-[500px] flex items-center justify-center p-8 border border-gray-100 relative">
+                {product.mainImage ? (
+                  <div className="relative w-full h-full">
+                    <Image 
+                      src={product.mainImage} 
+                      alt={product.title} 
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-4xl text-gray-300">
+                    🖼️
+                  </div>
+                )}
               </div>
               
               {product.additionalImages && product.additionalImages.length > 0 && (
                 <div className="grid grid-cols-4 gap-4">
                   {product.additionalImages.map((image: string, index: number) => (
                     image && (
-                      <div key={index} className="bg-gray-50 rounded-xl overflow-hidden aspect-square flex items-center justify-center p-2 border border-gray-100 hover:border-blue-300 transition-colors cursor-pointer">
-                        <img 
-                          src={image} 
-                          alt={`${product.title} - Image ${index + 1}`} 
-                          className="w-full h-full object-contain"
-                        />
+                      <div key={index} className="bg-gray-50 rounded-xl overflow-hidden aspect-square flex items-center justify-center p-2 border border-gray-100 hover:border-blue-300 transition-colors cursor-pointer relative">
+                        <div className="relative w-full h-full">
+                          <Image 
+                            src={image} 
+                            alt={`${product.title} - Image ${index + 1}`} 
+                            fill
+                            sizes="(max-width: 768px) 25vw, 15vw"
+                            className="object-contain"
+                            loading="lazy"
+                          />
+                        </div>
                       </div>
                     )
                   ))}
@@ -183,6 +202,7 @@ export default async function ProductDetailPage({
                 <Link 
                   href={`/${navbarCategory.slug}/${category.slug}/${subcategory.slug}`} 
                   className="flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-300"
+                  prefetch={false}
                 >
                   <FiArrowLeft className="mr-2" />
                   Back to {subcategory.title}
@@ -190,7 +210,7 @@ export default async function ProductDetailPage({
                 
                 <Link 
                   href="/contact" 
-                  className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-300 flex items-center"
+                  className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-300 flex items-center will-change-transform"
                 >
                   Request Quote
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

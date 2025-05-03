@@ -7,29 +7,37 @@ import Footer from '../Components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Metadata } from 'next';
+import { cache } from 'react';
 
 // Change the interface to match Next.js 15 expectations
 interface Params {
   slug: string;
 }
 
-export async function generateStaticParams() {
+// Cache database connections for better performance
+const getNavbarCategories = cache(async () => {
   await connectDB();
-  const categories = await NavbarCategory.find({ status: 'Active' });
+  return NavbarCategory.find({ status: 'Active' });
+});
+
+// Cached version of getCategoryBySlug
+const getCategoryBySlug = cache(async (slug: string) => {
+  await connectDB();
+  return NavbarCategory.findOne({ slug, status: 'Active' });
+});
+
+// Cached version of getCategoriesByNavbarCategory
+const getCategoriesByNavbarCategory = cache(async (navbarCategoryId: string) => {
+  await connectDB();
+  return Category.find({ navbarCategory: navbarCategoryId, status: 'Active' });
+});
+
+export async function generateStaticParams() {
+  const categories = await getNavbarCategories();
   
   return categories.map((category) => ({
     slug: category.slug,
   }));
-}
-
-async function getCategoryBySlug(slug: string) {
-  await connectDB();
-  return NavbarCategory.findOne({ slug, status: 'Active' });
-}
-
-async function getCategoriesByNavbarCategory(navbarCategoryId: string) {
-  await connectDB();
-  return Category.find({ navbarCategory: navbarCategoryId, status: 'Active' });
 }
 
 export async function generateMetadata({ 
@@ -64,11 +72,11 @@ export default async function CategoryPage({ params }: { params: Params }) {
       
       {/* Enhanced Hero Section */}
       <div className="bg-gradient-to-br from-blue-600 via-blue-500 to-sky-400 text-white pt-48 pb-32 relative overflow-hidden">
-        {/* Animated decorative elements */}
+        {/* Animated decorative elements - optimized with will-change for better performance */}
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-sky-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
-          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-blue-400/15 rounded-full blur-2xl animate-pulse delay-500"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse will-change-transform"></div>
+          <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-sky-300/20 rounded-full blur-3xl animate-pulse delay-700 will-change-transform"></div>
+          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-blue-400/15 rounded-full blur-2xl animate-pulse delay-500 will-change-transform"></div>
         </div>
         
         <div className="container mx-auto px-4 max-w-6xl relative z-10">
@@ -119,14 +127,20 @@ export default async function CategoryPage({ params }: { params: Params }) {
                     key={category._id}
                     href={`/${navbarCategory.slug}/${category.slug}`}
                     className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
+                    prefetch={false}
                   >
                     <div className="aspect-[3/2] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
                       {category.icon ? (
-                        <img 
-                          src={category.icon} 
-                          alt={category.name} 
-                          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                        />
+                        <div className="relative w-full h-full">
+                          <Image 
+                            src={category.icon} 
+                            alt={category.name} 
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            className="object-cover transform group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                          />
+                        </div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-4xl text-gray-300">
                           🖼️
