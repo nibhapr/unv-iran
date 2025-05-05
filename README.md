@@ -153,6 +153,8 @@ docker-compose up -d
 ## Learn More
 
 - [Uniview Official Website](https://en.uniview.com/) - Learn more about Uniview products
-- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Learn about Tailwind CSS
+- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API
 - [MongoDB Documentation](https://docs.mongodb.com/) - Learn about MongoDB
+- [Cloudinary Documentation](https://cloudinary.com/documentation) - Learn about Cloudinary
+- [Docker Documentation](https://docs.docker.com/) - Learn about Docker
