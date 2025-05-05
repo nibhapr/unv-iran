@@ -10,7 +10,7 @@ First, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:8084](http://localhost:8084) with your browser to see the result when running in docker.
+Open [http://localhost:8084](http://localhost:8084) with your browser to see the result when running in docker. <br>
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result when running in local.
 
 ## Environment Setup
