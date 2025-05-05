@@ -12,7 +12,8 @@ import {
   FiMessageSquare, 
   FiMail,
   FiLogOut,
-  FiChevronRight
+  FiChevronRight,
+  FiMap
 } from 'react-icons/fi';
 
 const AdminSidebar = () => {
@@ -44,6 +45,11 @@ const AdminSidebar = () => {
       href: '/admin/products', 
       label: 'Products', 
       icon: FiBox 
+    },
+    { 
+      href: '/admin/sitemap', 
+      label: 'Sitemap', 
+      icon: FiMap 
     },
     { 
       href: '/admin/contact', 

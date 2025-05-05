@@ -102,18 +102,56 @@ export default function Categories() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleIconChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleIconChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Here you would typically upload to a service like AWS S3 or Cloudinary
-      // For this example, we'll just use a local URL
+      // Check file size - limit to 5MB
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image is too large. Maximum size is 5MB.');
+        return;
+      }
+      
+      // Show the local preview first
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         if (e.target?.result) {
-          setIconPreview(e.target.result as string);
-          setFormData(prev => ({ ...prev, icon: e.target?.result as string }));
+          try {
+            // Set the local preview
+            setIconPreview(e.target.result as string);
+            
+            // Get the base64 string
+            const base64Image = e.target.result as string;
+            
+            // Upload to Cloudinary
+            const response = await fetch('/api/upload', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                image: base64Image,
+                folder: 'categories'
+              }),
+            });
+            
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Failed to upload image');
+            }
+            
+            const data = await response.json();
+            
+            // Update the form data with the Cloudinary URL
+            setFormData(prev => ({ ...prev, icon: data.url }));
+          } catch (error) {
+            console.error('Error uploading image:', error);
+            setError(error instanceof Error ? error.message : 'Failed to upload image. Please try again.');
+          }
         }
+      };
+      reader.onerror = () => {
+        setError('Error reading file. Please try again.');
       };
       reader.readAsDataURL(file);
     }
@@ -153,12 +191,31 @@ export default function Categories() {
     if (!confirm('Are you sure you want to delete this category?')) return;
 
     try {
+      // Get the category to delete (to get the icon URL)
+      const categoryToDelete = categories.find(cat => cat._id === id);
+      
       const response = await fetch(`/api/categories/${id}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
         throw new Error('Failed to delete category');
+      }
+
+      // If there was an icon, try to delete it from Cloudinary
+      if (categoryToDelete?.icon && categoryToDelete.icon.includes('cloudinary')) {
+        try {
+          await fetch('/api/upload/delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: categoryToDelete.icon }),
+          });
+        } catch (error) {
+          console.error('Error deleting image:', error);
+          // Continue anyway, as the category was already deleted
+        }
       }
 
       // Refresh the categories list

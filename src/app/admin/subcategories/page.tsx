@@ -141,18 +141,107 @@ export default function SubCategories() {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Here you would typically upload to a service like AWS S3 or Cloudinary
-      // For this example, we'll just use a local URL
+      // Check file size - limit to 5MB
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image is too large. Maximum size is 5MB.');
+        return;
+      }
+      
+      // Check file type
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        setError('Invalid file type. Please upload a JPEG, PNG, GIF, or WebP image.');
+        return;
+      }
+      
+      // Clear any previous errors
+      setError('');
+      
+      // Show the local preview first
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         if (e.target?.result) {
-          setImagePreview(e.target.result as string);
-          setFormData(prev => ({ ...prev, image: e.target?.result as string }));
+          try {
+            // Set the local preview
+            setImagePreview(e.target.result as string);
+            
+            // Get the base64 string
+            const base64Image = e.target.result as string;
+            
+            console.log('Image loaded, size:', Math.round((base64Image.length * 0.75) / 1024), 'KB');
+            
+            // First attempt: Try with the test-upload endpoint
+            try {
+              console.log('Attempting upload via test endpoint...');
+              const testResponse = await fetch('/api/test-upload', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  image: base64Image,
+                }),
+              });
+              
+              if (testResponse.ok) {
+                const data = await testResponse.json();
+                console.log('✅ Test upload successful:', data.url);
+                setFormData(prev => ({ ...prev, image: data.url }));
+                return;
+              } else {
+                console.log('❌ Test upload failed, trying standard upload...');
+              }
+            } catch (error) {
+              console.error('Error with test upload:', error);
+              // Continue to next attempt
+            }
+            
+            // Second attempt: Try with the regular upload endpoint with explicit folder
+            try {
+              console.log('Attempting standard upload...');
+              const response = await fetch('/api/upload', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  image: base64Image,
+                  folder: 'subcategories'
+                }),
+              });
+              
+              if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Upload failed with status:', response.status);
+                throw new Error(errorData.error || 'Failed to upload image');
+              }
+              
+              const data = await response.json();
+              console.log('✅ Image uploaded successfully:', data.url);
+              
+              // Update the form data with the Cloudinary URL
+              setFormData(prev => ({ ...prev, image: data.url }));
+            } catch (finalError) {
+              console.error('❌ All upload attempts failed:', finalError);
+              setError(finalError instanceof Error ? finalError.message : 'Failed to upload image. Please try again.');
+              // Reset image preview on error
+              setImagePreview(null);
+            }
+          } catch (error) {
+            console.error('❌ Error uploading image:', error);
+            setError(error instanceof Error ? error.message : 'Failed to upload image. Please try again.');
+            // Reset image preview on error
+            setImagePreview(null);
+          }
         }
+      };
+      reader.onerror = () => {
+        setError('Error reading file. Please try again.');
+        setImagePreview(null);
       };
       reader.readAsDataURL(file);
     }
@@ -219,12 +308,31 @@ export default function SubCategories() {
     if (!confirm('Are you sure you want to delete this subcategory?')) return;
 
     try {
+      // Get the subcategory to delete (to get the image URL)
+      const subcategoryToDelete = subcategories.find(sub => sub._id === id);
+      
       const response = await fetch(`/api/subcategories/${id}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
         throw new Error('Failed to delete subcategory');
+      }
+
+      // If there was an image, try to delete it from Cloudinary
+      if (subcategoryToDelete?.image && subcategoryToDelete.image.includes('cloudinary')) {
+        try {
+          await fetch('/api/upload/delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: subcategoryToDelete.image }),
+          });
+        } catch (error) {
+          console.error('Error deleting image:', error);
+          // Continue anyway, as the subcategory was already deleted
+        }
       }
 
       // Refresh the subcategories list

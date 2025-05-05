@@ -13,7 +13,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['randomuser.me', 'images.unsplash.com'],
+    domains: ['randomuser.me', 'images.unsplash.com', 'res.cloudinary.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -21,10 +21,19 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   env: {
     JWT_SECRET: process.env.JWT_SECRET,
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   },
   // Add rewrites for sitemap.xml
   async rewrites() {
