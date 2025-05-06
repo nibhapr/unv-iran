@@ -44,6 +44,9 @@ const nextConfig = {
       },
     ];
   },
+  experimental: {
+    incrementalStaticRegeneration: true,  // Enables ISR
+  },
 }
 
 module.exports = nextConfig

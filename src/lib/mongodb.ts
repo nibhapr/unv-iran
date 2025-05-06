@@ -21,6 +21,12 @@ if (!cached) {
 }
 
 async function connectDB() {
+  // Skip during build or production
+  if (process.env.NODE_ENV === 'production') {
+    console.log('Skipping MongoDB connection during build');
+    return null;
+  }
+
   if (cached!.conn) {
     return cached!.conn;
   }
