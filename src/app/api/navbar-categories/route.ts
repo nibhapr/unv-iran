@@ -8,11 +8,22 @@ export async function GET() {
     console.log("Connecting to MongoDB...");
     await connectDB();
     console.log("Connected to MongoDB successfully");
+    
+    console.log("Fetching NavbarCategory model...");
+    if (!NavbarCategory) {
+      console.error("NavbarCategory model is undefined");
+      return NextResponse.json({ error: 'NavbarCategory model not found' }, { status: 500 });
+    }
+    
     const categories = await NavbarCategory.find({}).sort({ order: 1 });
+    console.log("Categories fetched successfully:", categories.length);
     return NextResponse.json(categories, { status: 200 });
   } catch (error) {
     console.error('Error fetching navbar categories:', error);
-    return NextResponse.json({ error: 'Failed to fetch navbar categories' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to fetch navbar categories',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }
 
@@ -36,4 +47,4 @@ export async function POST(request: NextRequest) {
     console.error('Error creating navbar category:', error);
     return NextResponse.json({ error: 'Failed to create navbar category' }, { status: 500 });
   }
-} 
+}
