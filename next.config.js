@@ -26,7 +26,9 @@ const nextConfig = {
   output: 'standalone', // Add this for better deployment compatibility
   experimental: {
     // Remove incrementalStaticRegeneration as it's now stable
-    serverActions: true,
+    serverActions: {
+      allowedOrigins: ['localhost:3000', 'unv-iran.com']
+    },
   },
 }
 
