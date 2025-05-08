@@ -30,11 +30,11 @@ export async function POST(request: NextRequest) {
   console.log(`Starting upload ${uploadId}, concurrent uploads: ${currentUploads}/${MAX_CONCURRENT_UPLOADS}`);
   
   try {
-    // Check content length
+    // Check content length (increased to 50MB)
     const contentLength = request.headers.get('content-length');
-    if (contentLength && parseInt(contentLength) > 10 * 1024 * 1024) {
+    if (contentLength && parseInt(contentLength) > 50 * 1024 * 1024) {
       console.error(`Request too large, content-length: ${contentLength} [${uploadId}]`);
-      return NextResponse.json({ error: 'Request body too large (max 10MB)' }, { status: 413 });
+      return NextResponse.json({ error: 'Request body too large (max 50MB)' }, { status: 413 });
     }
     
     // Parse the request body
@@ -76,11 +76,11 @@ export async function POST(request: NextRequest) {
     const validFolders = ['categories', 'subcategories', 'products', 'navbar', 'banners'];
     const targetFolder = folder && validFolders.includes(folder) ? folder : 'categories'; // Default to categories
     
-    // Check base64 string size
+    // Check base64 string size (increased to 50MB)
     const base64Size = image.length * 0.75; // Approximate size in bytes
-    if (base64Size > 10 * 1024 * 1024) {
+    if (base64Size > 50 * 1024 * 1024) {
       console.error(`Image too large: ${Math.round(base64Size / (1024 * 1024))}MB [${uploadId}]`);
-      return NextResponse.json({ error: 'Image too large (max 10MB)' }, { status: 413 });
+      return NextResponse.json({ error: 'Image too large (max 50MB)' }, { status: 413 });
     }
     
     // Verify image format and fix if needed
@@ -140,4 +140,4 @@ export async function POST(request: NextRequest) {
     currentUploads--;
     console.log(`Finished upload ${uploadId}, remaining uploads: ${currentUploads}/${MAX_CONCURRENT_UPLOADS}`);
   }
-} 
+}

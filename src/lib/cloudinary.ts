@@ -106,12 +106,14 @@ export async function uploadImage(file: string, folder: string = 'categories'): 
     uploads.set(uploadId, { ...uploadInfo, status: 'uploading' });
 
     // Prepare upload options with special handling for subcategories
+    // Remove size check to allow larger files
     const uploadOptions: any = {
       folder: `unv-iran/${folder}`,
-      resource_type: 'image',
-      timeout: 60000, // 60 seconds timeout for large uploads
+      resource_type: 'auto',  // Changed to 'auto' to accept any file type
+      timeout: 120000, // Increased timeout for larger files
       overwrite: true,
       unique_filename: true,
+      allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'pdf', 'ico', 'bmp', 'tiff'],  // Add more formats as needed
     };
     
     // For subcategories, add some additional options that might help
@@ -253,4 +255,4 @@ export async function deleteImage(url: string): Promise<void> {
     }
     throw new Error('Failed to delete image');
   }
-} 
+}
