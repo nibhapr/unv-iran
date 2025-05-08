@@ -7,31 +7,26 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    domains: ['res.cloudinary.com'], // Add Cloudinary domain
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'res.cloudinary.com',
         port: '',
         pathname: '/**',
       },
     ],
-},
+  },
   env: {
     JWT_SECRET: process.env.JWT_SECRET,
     CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   },
-  async rewrites() {
-    return [
-      {
-        source: '/sitemap.xml',
-        destination: '/api/sitemap',
-      },
-    ];
-  },
+  output: 'standalone', // Add this for better deployment compatibility
   experimental: {
-    incrementalStaticRegeneration: true,
+    // Remove incrementalStaticRegeneration as it's now stable
+    serverActions: true,
   },
 }
 

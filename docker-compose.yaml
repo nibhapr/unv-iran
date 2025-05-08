@@ -3,7 +3,7 @@ services:
     build: .
     ports:
       - "8084:8084"
-    command: ["sh", "-c", "npm run start"]
+    command: ["sh", "-c", "npm run build && npm run start"]
     environment:
       - NODE_ENV=production
       - PORT=8084
@@ -16,4 +16,6 @@ services:
       - CLOUDINARY_API_KEY=644637253953816
       - CLOUDINARY_API_SECRET=ylf1oww0Wh_m4Wt7gmcPbth8pEU
     volumes:      
-      - ./node_modules:/app/node_modules
+      - .:/app
+      - /app/node_modules
+      - /app/.next

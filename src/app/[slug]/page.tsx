@@ -33,13 +33,7 @@ const getCategoriesByNavbarCategory = cache(async (navbarCategoryId: string) => 
 });
 
 export async function generateStaticParams() {
-  // Skip during build
-  if (process.env.NODE_ENV === 'production') {
-    console.log('Skipping MongoDB fetch during build');
-    return []; // Return empty array to avoid build-time data fetching
-  }
-
-  // Only fetch in development
+  // Connect to MongoDB in both development and production
   await connectDB();
   const categories = await NavbarCategory.find({ status: 'Active' });
   return categories.map((category) => ({

@@ -4,11 +4,6 @@ import Product from '@/models/Product';
 
 export async function GET() {
   try {
-    await connectDB();
-    
-    // Fetch all active products
-    const products = await Product.find({ status: 'active' });
-    
     // Base URLs for the sitemap
     const baseUrls = [
       { url: 'https://unv-iran.com/', lastmod: new Date().toISOString().split('T')[0], changefreq: 'monthly', priority: '1.0' },
@@ -31,13 +26,31 @@ export async function GET() {
       { url: 'https://unv-iran.com/cookies', lastmod: new Date().toISOString().split('T')[0], changefreq: 'yearly', priority: '0.5' },
     ];
     
-    // Add product URLs
-    const productUrls = products.map(product => ({
-      url: `https://unv-iran.com/products/${product._id}`,
-      lastmod: product.updatedAt ? new Date(product.updatedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-      changefreq: 'weekly',
-      priority: '0.8'
-    }));
+    let productUrls: { url: string; lastmod: string; changefreq: string; priority: string; }[] = [];
+    
+    // Check if we're in build mode
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      console.log('Skipping MongoDB fetch during sitemap build');
+    } else {
+      try {
+        // Only try to connect to MongoDB if not in build phase
+        await connectDB();
+        
+        // Fetch all active products
+        const products = await Product.find({ status: 'active' });
+        
+        // Add product URLs
+        productUrls = products.map(product => ({
+          url: `https://unv-iran.com/products/${product._id}`,
+          lastmod: product.updatedAt ? new Date(product.updatedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          changefreq: 'weekly',
+          priority: '0.8'
+        }));
+      } catch (dbError) {
+        console.warn('Could not connect to MongoDB for sitemap generation:', dbError);
+        // Continue with just the static URLs
+      }
+    }
     
     // Combine all URLs
     const allUrls = [...baseUrls, ...productUrls];
