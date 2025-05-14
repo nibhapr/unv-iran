@@ -58,11 +58,7 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterOpen, setFilterOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
-  const [stockFilter, setStockFilter] = useState('');
-  const [sortBy, setSortBy] = useState('newest');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
   // Fetch data on component mount
@@ -76,7 +72,7 @@ export default function Products() {
   // Apply filters whenever filter criteria change
   useEffect(() => {
     applyFilters();
-  }, [searchTerm, selectedCategory, priceRange, stockFilter, sortBy, products]);
+  }, [searchTerm, selectedCategory, products]);
 
   const fetchProducts = async () => {
     try {
@@ -135,40 +131,7 @@ export default function Products() {
       });
     }
     
-    // Apply price range filter
-    if (priceRange.min) {
-      result = result.filter(product => product.price >= Number(priceRange.min));
-    }
-    if (priceRange.max) {
-      result = result.filter(product => product.price <= Number(priceRange.max));
-    }
-    
-    // Apply stock filter
-    if (stockFilter === 'instock') {
-      result = result.filter(product => product.stock > 0);
-    } else if (stockFilter === 'low') {
-      result = result.filter(product => product.stock > 0 && product.stock <= 5);
-    } else if (stockFilter === 'outofstock') {
-      result = result.filter(product => product.stock === 0);
-    }
-    
-    // Apply sorting
-    if (sortBy === 'newest') {
-      // Assuming products are already sorted by newest from the API
-    } else if (sortBy === 'pricelow') {
-      result.sort((a, b) => a.price - b.price);
-    } else if (sortBy === 'pricehigh') {
-      result.sort((a, b) => b.price - a.price);
-    } else if (sortBy === 'name') {
-      result.sort((a, b) => a.title.localeCompare(b.title));
-    }
-    
     setFilteredProducts(result);
-  };
-
-  const handlePriceRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setPriceRange(prev => ({ ...prev, [name]: value }));
   };
 
   // Function to get product URL based on its hierarchy
@@ -240,15 +203,6 @@ export default function Products() {
             </div>
             
             <div className="flex w-full md:w-auto gap-3">
-              <button 
-                onClick={() => setFilterOpen(!filterOpen)}
-                className="px-4 py-3 border rounded-lg flex items-center hover:bg-gray-50 transition-all w-full md:w-auto justify-center"
-              >
-                <FiFilter className="mr-2 text-gray-600" />
-                Filters
-                <FiChevronDown className={`ml-2 text-gray-600 transform transition-transform ${filterOpen ? 'rotate-180' : ''}`} />
-              </button>
-              
               <select 
                 className="px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none bg-white w-full md:w-auto"
                 value={selectedCategory}
@@ -278,69 +232,6 @@ export default function Products() {
               </div>
             </div>
           </div>
-          
-          {filterOpen && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-100">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
-                <div className="flex space-x-3">
-                  <input 
-                    type="number" 
-                    name="min"
-                    placeholder="Min" 
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    value={priceRange.min}
-                    onChange={handlePriceRangeChange}
-                  />
-                  <input 
-                    type="number" 
-                    name="max"
-                    placeholder="Max" 
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    value={priceRange.max}
-                    onChange={handlePriceRangeChange}
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Stock Status</label>
-                <select 
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={stockFilter}
-                  onChange={(e) => setStockFilter(e.target.value)}
-                >
-                  <option value="">All</option>
-                  <option value="instock">In Stock</option>
-                  <option value="low">Low Stock</option>
-                  <option value="outofstock">Out of Stock</option>
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
-                <select 
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="pricelow">Price: Low to High</option>
-                  <option value="pricehigh">Price: High to Low</option>
-                  <option value="name">Name</option>
-                </select>
-              </div>
-              
-              <div className="flex items-end">
-                <button 
-                  className="w-full py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                  onClick={applyFilters}
-                >
-                  Apply Filters
-                </button>
-              </div>
-            </div>
-          )}
         </motion.div>
 
         {/* Products display section */}
